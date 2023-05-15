@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -13,7 +14,7 @@ namespace ApiMVC.Controllers
 {
     public class CallHistoryController : Controller
     {
-        // LẤY LỊCH SỬ CUỘC GỌI VÀ LƯU VÀO DATABASE
+        // Lấy lịch sử cuộc gọi và lưu vào database
         public async Task<ActionResult> Index()
         {
             using (var client = new HttpClient())
@@ -72,7 +73,7 @@ namespace ApiMVC.Controllers
             }
         }
 
-        // LẤY LỊCH SỬ CUỘC GỌI NHƯNG KHÔNG LƯU VÀO DATABASE
+        // Lấy lịch sử cuộc gọi nhưng không lưu vào db
         public async Task<ActionResult> GetHistoryCall()
         {
             using (var httpClient = new HttpClient())
@@ -92,12 +93,11 @@ namespace ApiMVC.Controllers
             }
         }
 
-        //XỬ LÝ TẢI TẬP TIN GHI ÂM VÀ LƯU VÀO THƯ MỤC RECORDINGS THEO CHUỖI TỪ URL
+        //XỬ LÝ TẢI TẬP TIN GHI ÂM (lưu theo chuỗi trong url)
         public ActionResult DownloadForUrl(string downloadUrl)
         {
             using (WebClient client = new WebClient())
             {
-
                 // Tải về tập tin từ URL của API
                 byte[] result = client.DownloadData(downloadUrl);
                 int startIndex = downloadUrl.IndexOf("&pkeyID=") + "&pkeyID=".Length;
@@ -125,8 +125,47 @@ namespace ApiMVC.Controllers
             }
         }
 
+        //XỬ LÝ TẢI TẬP TIN GHI ÂM VÀ LƯU VÀO THƯ MỤC RECORDINGS THEO GIỜ, PHÚT, GIÂY
+        public ActionResult DownloadForTime(string downloadUrl)
+        {
+            using (WebClient client = new WebClient())
+            {
+                // Tải về tập tin từ URL của API
+                byte[] result = client.DownloadData(downloadUrl);
 
-        // XỬ LÝ TẬP TIN GHI ÂM V1 (lưu theo cú pháp năm-tháng-ngày_giờ:phút:giây)
+                //string year = DateTime.Now.Year.ToString();
+                //string month = DateTime.Now.ToString("MMMM", CultureInfo.CreateSpecificCulture("en-US"));
+                //string day = "Day " + DateTime.Now.Day.ToString().PadLeft(2, '0');
+
+
+                //Tạo đường dẫn để lưu tệp mới trong thư mục "Recordings" theo năm, tháng, ngày 
+                string year = DateTime.Now.Year.ToString();
+                string month = DateTime.Now.Month.ToString().PadLeft(2, '0');
+                string recordingsPath = Server.MapPath("~/Recordings");
+                string folderPath = Path.Combine(recordingsPath, year, month);
+
+                // Tạo thư mục lưu trữ nếu nó chưa tồn tại
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+
+                // Tạo tên tệp mới cú pháp là ngày/tháng/năm để lưu tập tin vào thư mục "Downloads" của ứng dụng.
+                string fileName = DateTime.Now.ToString("dd-MM-yyyy_HHmmss") + ".wav";
+
+                // Lưu tập tin vừa tải về vào đường dẫn chỉ định.
+                System.IO.File.WriteAllBytes(Path.Combine(folderPath, fileName), result);
+
+                // Trả về file vừa tải về để tải xuống và lưu vào thư mục Downloads.
+                return File(result, "audio/wav", fileName);
+            }
+        }
+
+
+
+
+
+        // Xử lý và tải tập tin ghi âm (lưu tên file theo cú pháp năm-tháng-ngày_giờ:phút:giây)
         public string SaveFileDateTime(byte[] data)
         {
             //Chỉ định đường dẫn để lưu tệp mới trong thư mục "Downloads" của ứng dụng.
@@ -153,7 +192,7 @@ namespace ApiMVC.Controllers
 
         }
 
-        // LƯU ĐƯỜNG DẪN CHỨA FILE VÀO DATBASE (VERSION 1)
+        // Lưu đường dẫn chứa tập tin ghi âm vào database
         public async Task<ActionResult> DownloadFileDateTime(string downloadUrl)
         {
             using (WebClient client = new WebClient())
@@ -191,11 +230,13 @@ namespace ApiMVC.Controllers
                 return File(result, "audio/wav", Path.GetFileName(filePath));
             }
         }
-        public string SaveFile(byte[] data, string fileName)
+
+        // Xử lý và tải tập tin ghi âm (lưu theo cú pháp chuỗi trong url)
+        public string SaveFileUrl(byte[] data, string fileName)
         {
             string recordingPath = Server.MapPath("~/Recordings");
             string year = DateTime.Now.Year.ToString();
-            string month = DateTime.Now.Month.ToString().PadLeft(2, '0');
+            string month = DateTime.Now.ToString("MMMM", CultureInfo.CreateSpecificCulture("en-US"));
             string folderPath = Path.Combine(recordingPath, year, month);
 
             //Tạo thư mục lưu trữ nếu nó chưa tồn tại.
@@ -211,9 +252,8 @@ namespace ApiMVC.Controllers
             return Path.Combine(folderPath, fileName);
         }
 
-
-        // LƯU ĐƯỜNG DẪN CHỨA FILE VÀO DATBASE 
-        public async Task<ActionResult> DownloadFile(string downloadUrl)
+        // Lưu đường dẫn chứa file vào database 
+        public async Task<ActionResult> DownloadFileUrl(string downloadUrl)
         {
             using (WebClient client = new WebClient())
             {
@@ -224,7 +264,7 @@ namespace ApiMVC.Controllers
                     int endIndex = downloadUrl.LastIndexOf(".gsm");
                     string fileName = downloadUrl.Substring(startIndex, endIndex - startIndex) + ".wav";
 
-                    var filePath = SaveFile(result, fileName);
+                    var filePath = SaveFileUrl(result, fileName);
                     using (var db = new CallDbContext())
                     {
                         var callHistory = db.CallsHistory.FirstOrDefault(x => x.Download == downloadUrl);
@@ -246,11 +286,9 @@ namespace ApiMVC.Controllers
                     return File(result, "audio/wav", Path.GetFileName(filePath));
                 } 
                 catch(Exception ex)
-                {
-                    // Lưu thông báo lỗi vào TempData                   
+                {             
                     return RedirectToAction("FailedResponse","Home");
-                }
-                
+                }              
             }
         }
     }

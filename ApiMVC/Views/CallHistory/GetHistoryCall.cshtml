@@ -121,7 +121,7 @@
             <th>Ngày gọi</th>
             <th>Số nhận</th>
             <th>Đầu số</th>
-            <th>Trạng thái</th>
+            <th class="text-center">Trạng thái</th>
             <th class="text-center">Thời lượng</th>
             <th>Số gọi</th>
             <th class="text-center">Loại cuộc gọi</th>
@@ -210,7 +210,6 @@
                 <td style="text-align:center">
                     @if (!string.IsNullOrEmpty(item.Download))
                     {
-
                         <a style="display:inline-block;margin:auto" class="btn btn-success" href="@Url.Action("DownloadForUrl","CallHistory", new { downloadUrl = item.Download })">
                             <i class="fa-solid fa-download"></i>
                         </a>
@@ -223,7 +222,7 @@
                 <td style="text-align:center">
                     @if (!string.IsNullOrEmpty(item.Download))
                     {
-                        <a style="display:inline-block;margin:auto" class="btn btn-primary" type="button" href="@Url.Action("DownloadFile","CallHistory", new { downloadUrl = item.Download })">
+                        <a style="display:inline-block;margin:auto" class="btn btn-primary" type="button" href="@Url.Action("DownloadFileUrl","CallHistory", new { downloadUrl = item.Download })">
                             <i class="fa-sharp fa-solid fa-download"></i>
                         </a>
                     }

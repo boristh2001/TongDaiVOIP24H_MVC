@@ -22,6 +22,7 @@ namespace ApiMVC.Controllers
             return View();
         }
 
+
         public async Task<ActionResult> CallApi(string phone)
         {
             using (var client = new HttpClient())
