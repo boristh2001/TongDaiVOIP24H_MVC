@@ -92,77 +92,48 @@ namespace ApiMVC.Controllers
             }
         }
 
-        // XỬ LÝ TẢI TẬP TIN GHI ÂM VÀ LƯU VÀO THƯ MỤC RECORDINGS THEO NĂM, THÁNG, NGÀY
-        public ActionResult DownloadForDate(string downloadUrl)
+        //XỬ LÝ TẢI TẬP TIN GHI ÂM VÀ LƯU VÀO THƯ MỤC RECORDINGS THEO CHUỖI TỪ URL
+        public ActionResult DownloadForUrl(string downloadUrl)
         {
             using (WebClient client = new WebClient())
             {
-                // Tải về tập tin từ URL của API.
+
+                // Tải về tập tin từ URL của API
                 byte[] result = client.DownloadData(downloadUrl);
+                int startIndex = downloadUrl.IndexOf("&pkeyID=") + "&pkeyID=".Length;
+                int endIndex = downloadUrl.LastIndexOf(".gsm");
 
-                // Chỉ định đường dẫn để lưu tệp mới trong thư mục "Downloads" của ứng dụng.
-                var dateNow = DateTime.Now;
-                var folderPath = Path.Combine(Server.MapPath("~/Recordings/"), dateNow.Year.ToString(), dateNow.Month.ToString(), dateNow.Day.ToString());
+                //Tạo đường dẫn để lưu tệp mới trong thư mục "Recordings" theo năm, tháng, ngày 
+                string year = DateTime.Now.Year.ToString();
+                string month = DateTime.Now.Month.ToString().PadLeft(2, '0');
+                string recordingsPath = Server.MapPath("~/Recordings");
+                string folderPath = Path.Combine(recordingsPath, year, month);
 
-                // Tạo thư mục lưu trữ nếu nó chưa tồn tại.
                 if (!Directory.Exists(folderPath))
                 {
                     Directory.CreateDirectory(folderPath);
                 }
 
-                // Tạo tên tệp mới để lưu tập tin vào thư mục "Downloads" của ứng dụng.
-                string fileName = DateTime.Now.ToString("dd-MM-yyyy_HHmmss") + ".wav";
+                // Tạo tên tệp mới cú pháp là ngày/tháng/năm để lưu tập tin vào thư mục "Downloads" của ứng dụng.
+                string fileName = downloadUrl.Substring(startIndex, endIndex - startIndex) + ".wav";
 
                 // Lưu tập tin vừa tải về vào đường dẫn chỉ định.
                 System.IO.File.WriteAllBytes(Path.Combine(folderPath, fileName), result);
 
-                string filePath = Path.Combine(folderPath, fileName);
-
                 // Trả về file vừa tải về để tải xuống và lưu vào thư mục Downloads.
                 return File(result, "audio/wav", fileName);
             }
         }
 
-        // XỬ LÝ TẢI TẬP TIN GHI ÂM VÀ LƯU VÀO THƯ MỤC RECORDINGS CHUỖI LẤY RA TỪ URL
-        public ActionResult DownloadForUrl(string downloadUrl)
-        {
-            using(WebClient client = new WebClient())
-            {
-                // Tải về tập tin từ tham số downloadUrl truyền từ thẻ a
-                byte[] result = client.DownloadData(downloadUrl);
-
-                // Lấy chuỗi từ URL
-                int startUrl = downloadUrl.IndexOf("&pkeyID=") + "&pkeyID=".Length;
-                int endUrl = downloadUrl.LastIndexOf(".gsm");
-
-                // Tạo thư mục lưu trữ theo thời gian hiện tại
-                var dateNow = DateTime.Now;
-                var folderPath = Path.Combine(Server.MapPath("~/Recordings"), dateNow.Year.ToString(), dateNow.Month.ToString(), dateNow.Day.ToString());
-
-                if(!Directory.Exists(folderPath))
-                {
-                    Directory.CreateDirectory(folderPath);
-                }
-                // Tạo tên tệp mới cú pháp là ngày / tháng / năm để lưu tập tin vào thư mục "Downloads" của ứng dụng.
-                string fileName = downloadUrl.Substring(startUrl, endUrl - startUrl) + ".wav";
-                // Lưu tập tin vừa tải về vào đường dẫn chỉ định.
-                System.IO.File.WriteAllBytes(Path.Combine(folderPath,fileName), result);
-
-                // Trả về file vừa tải về để tải xuống và lưu vào thư mục Downloads.
-                return File(result, "audio/wav", fileName);
-
-            }
-        }
 
         // XỬ LÝ TẬP TIN GHI ÂM V1 (lưu theo cú pháp năm-tháng-ngày_giờ:phút:giây)
-        public string SaveFileV1(byte[] data)
+        public string SaveFileDateTime(byte[] data)
         {
             //Chỉ định đường dẫn để lưu tệp mới trong thư mục "Downloads" của ứng dụng.
-            string recordingsPath = Server.MapPath("~/Recordings");
+            string recordingPath = Server.MapPath("~/Recordings");
             string year = DateTime.Now.Year.ToString();
             string month = DateTime.Now.Month.ToString().PadLeft(2, '0');
-            string day = DateTime.Now.Day.ToString().PadLeft(2, '0');
-            string folderPath = Path.Combine(recordingsPath, year, month, day);
+            string folderPath = Path.Combine(recordingPath, year, month);
 
             //Tạo thư mục lưu trữ nếu nó chưa tồn tại.
             if (!Directory.Exists(folderPath))
@@ -182,33 +153,8 @@ namespace ApiMVC.Controllers
 
         }
 
-        // XỬ LÝ TẢI TẬP TIN GHI ÂM V2 ( lưu theo cú pháp từ 1 chuỗi url)
-        public string SaveFileV2(byte[] data, string fileName)
-        {
-            //Chỉ định đường dẫn để lưu tệp mới trong thư mục "Downloads" của ứng dụng.
-            //var dateNow = DateTime.Now;
-            //var folderPath = Path.Combine(Server.MapPath("~/Recordings/"), dateNow.Year.ToString(), dateNow.Month.ToString(), dateNow.Day.ToString());
-
-            string recordingsPath = Server.MapPath("~/Recordings");
-            string year = DateTime.Now.Year.ToString();
-            string month = DateTime.Now.Month.ToString().PadLeft(2, '0');
-            string day = DateTime.Now.Day.ToString().PadLeft(2,'0');
-
-            string folderPath = Path.Combine(recordingsPath, year, month, day);
-            //Tạo thư mục lưu trữ nếu nó chưa tồn tại.
-            if (!Directory.Exists(folderPath))
-            {
-                Directory.CreateDirectory(folderPath);
-            }
-
-            //Lưu tập tin vừa tải về vào đường dẫn chỉ định.
-            System.IO.File.WriteAllBytes(Path.Combine(folderPath, fileName), data);
-
-            //Trả về đường dẫn tới tệp vừa tải về
-            return Path.Combine(folderPath, fileName);
-        }
         // LƯU ĐƯỜNG DẪN CHỨA FILE VÀO DATBASE (VERSION 1)
-        public async Task<ActionResult> DownloadV1(string downloadUrl)
+        public async Task<ActionResult> DownloadFileDateTime(string downloadUrl)
         {
             using (WebClient client = new WebClient())
             {
@@ -216,7 +162,7 @@ namespace ApiMVC.Controllers
                 byte[] result = client.DownloadData(downloadUrl);
 
                 // Lưu tập tin vừa tải về vào đường dẫn chỉ định.
-                var filePath = SaveFileV1(result);
+                var filePath = SaveFileDateTime(result);
 
                 using (var db = new CallDbContext())
                 {
@@ -245,40 +191,67 @@ namespace ApiMVC.Controllers
                 return File(result, "audio/wav", Path.GetFileName(filePath));
             }
         }
-        // LƯU ĐƯỜNG DẪN CHỨA FILE VÀO DATBASE (VERSION 2)
-        public async Task<ActionResult> DownloadV2(string downloadUrl)
+        public string SaveFile(byte[] data, string fileName)
         {
-            using (WebClient client = new WebClient())
+            string recordingPath = Server.MapPath("~/Recordings");
+            string year = DateTime.Now.Year.ToString();
+            string month = DateTime.Now.Month.ToString().PadLeft(2, '0');
+            string folderPath = Path.Combine(recordingPath, year, month);
+
+            //Tạo thư mục lưu trữ nếu nó chưa tồn tại.
+            if (!Directory.Exists(folderPath))
             {
-                byte[] result = client.DownloadData(downloadUrl);
-                int startIndex = downloadUrl.IndexOf("&pkeyID=") + "&pkeyID=".Length;
-                int endIndex = downloadUrl.LastIndexOf(".gsm");
-                string fileName = downloadUrl.Substring(startIndex, endIndex - startIndex) + ".wav";
-
-                var filePath = SaveFileV2(result, fileName);
-                using (var db = new CallDbContext())
-                {
-                    var callHistory = db.CallsHistory.FirstOrDefault(x => x.Download == downloadUrl);
-                    if (callHistory != null)
-                    {
-                        callHistory.Download = filePath;
-                    }
-                    else
-                    {
-                        var entity = new CallHistory
-                        {
-                            Download = filePath,
-                        };
-
-                        db.CallsHistory.Add(entity);
-                    }
-
-                    await db.SaveChangesAsync();
-                }
-                return File(result, "audio/wav", fileName);
+                Directory.CreateDirectory(folderPath);
             }
+
+            //Lưu tập tin vừa tải về vào đường dẫn chỉ định
+            System.IO.File.WriteAllBytes(Path.Combine(folderPath, fileName), data);
+
+            //Trả về đường dẫn tới tệp vừa tải về
+            return Path.Combine(folderPath, fileName);
         }
 
 
+        // LƯU ĐƯỜNG DẪN CHỨA FILE VÀO DATBASE 
+        public async Task<ActionResult> DownloadFile(string downloadUrl)
+        {
+            using (WebClient client = new WebClient())
+            {
+                try
+                {
+                    byte[] result = client.DownloadData(downloadUrl);
+                    int startIndex = downloadUrl.IndexOf("&pkeyID=") + "&pkeyID=".Length;
+                    int endIndex = downloadUrl.LastIndexOf(".gsm");
+                    string fileName = downloadUrl.Substring(startIndex, endIndex - startIndex) + ".wav";
+
+                    var filePath = SaveFile(result, fileName);
+                    using (var db = new CallDbContext())
+                    {
+                        var callHistory = db.CallsHistory.FirstOrDefault(x => x.Download == downloadUrl);
+                        if (callHistory != null)
+                        {
+                            callHistory.Download = filePath;
+                        }
+                        else
+                        {
+                            var entity = new CallHistory
+                            {
+                                Download = filePath,
+                            };
+
+                            db.CallsHistory.Add(entity);
+                        }
+                        await db.SaveChangesAsync();
+                    }
+                    return File(result, "audio/wav", Path.GetFileName(filePath));
+                } 
+                catch(Exception ex)
+                {
+                    // Lưu thông báo lỗi vào TempData                   
+                    return RedirectToAction("FailedResponse","Home");
+                }
+                
+            }
+        }
     }
 }

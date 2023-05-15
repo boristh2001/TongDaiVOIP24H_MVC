@@ -12,5 +12,15 @@ namespace ApiMVC.Controllers
         {
             return View();
         }
+
+        public ActionResult SuccessfulResponse()
+        {
+            return View();
+        }
+
+        public ActionResult FailedResponse()
+        {
+            return View();
+        }
     }
 }

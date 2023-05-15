@@ -9,8 +9,6 @@
 <script src="~/Assets/Contact/js/sip.js"></script>
 <script src="~/Assets/Contact/js/moment.min.js"></script>
 <script src="https://kit.fontawesome.com/a36c5d7fce.js" crossorigin="anonymous"></script>
-
-
 <link href="~/Assets/Contact/css/main.css" rel="stylesheet" />
 <link href="~/Assets/Contact/css/all.css" rel="stylesheet" />
 <link href="~/Assets/Contact/css/bootstrap.min.css" rel="stylesheet" />
@@ -44,13 +42,9 @@
 <script type="text/javascript" src="~/Assets/Contact/js/VoipSIP.min.js"></script>
 
 <script>
-    // Xử lý nút GỌI
     function callControllerAction() {
         var inputData = document.getElementById('numDisplay').value;
-        var button = document.getElementById('phone');
-
-
-
+       
         // Tạo đối tượng XMLHttpRequest
         var xhr = new XMLHttpRequest();
 
@@ -234,9 +228,6 @@
     </div>
 </div>
 
-
-
-</a>
 <audio id="ringtone" src="~/Assets/Contact/sounds/incoming.mp3" loop></audio>
 <audio id="ringbacktone" src="~/Assets/Contact/sounds/outgoing.mp3" loop></audio>
 <audio id="dtmfTone" src="~/Assets/Contact/sounds/dtmf.mp3"></audio>

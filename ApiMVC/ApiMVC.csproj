@@ -242,6 +242,8 @@
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="Recordings\2023\05\external-124-0812195764-20230515-094258-1684118578.248503.wav" />
+    <Content Include="Recordings\2023\05\out-0812195764-124-20230515-094146-1684118505.248489.wav" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -303,11 +305,12 @@
     <Content Include="Views\CallApiMvc\Call.cshtml" />
     <Content Include="Views\CallHistory\GetHistoryCall.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\SuccessfulResponse.cshtml" />
+    <Content Include="Views\Home\FailedResponse.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Assets\Contact\recordings\" />
-    <Folder Include="Recordings\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\bootstrap.min.js.map" />

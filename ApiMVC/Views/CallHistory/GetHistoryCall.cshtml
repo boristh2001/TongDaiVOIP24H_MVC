@@ -112,99 +112,124 @@
         xhr.open('GET', '/CallHistory/Index', true);
         xhr.send();
     }
-
-    $('#downloadLink').on('click', function () {
-        $(this).attr('disabled', 'disabled');
-    });
 </script>
 
-<table class="table table-bordered">
-    <thead>
+
+<table class="table" style="font-size:13px">
+    <thead >
         <tr>
             <th>Ngày gọi</th>
-            <th>Đầu số</th>
             <th>Số nhận</th>
-            <th>Mã cuộc gọi</th>
-            <th>Thời gian đàm thoại</th>
-            <th>Thời lượng cuộc gọi</th>
-            <th>Số gọi</th>
+            <th>Đầu số</th>
             <th>Trạng thái</th>
-            <th>Loại cuộc gọi</th>
-            <th>Nghe</th>
-            <th>File ghi âm</th>
-            <th>Tải xuống</th>
+            <th class="text-center">Thời lượng</th>
+            <th>Số gọi</th>
+            <th class="text-center">Loại cuộc gọi</th>
+            <th class="text-center">File ghi âm</th>
+            <th class="text-center">Tải xuống</th>
+            <th >Cập nhật</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
+            <tr style="font-weight:600">
                 <td>@string.Format("{0:dd/MM/yyyy HH:mm:ss}", item.CallDate)</td>
+                <td style="color:#F8444F">@item.Dst</td>
                 <td>@item.Src</td>
-                <td>@item.Dst</td>
-                <td>@item.CallId</td>
-                <td>@item.BillSec</td>
-                <td>@item.Duration</td>
-                <td>@item.Did</td>
-                <td>@item.Status</td>
-                @if (item.Type == "outbound")
+                @if (item.Status == "BUSY")
                 {
-                    <td>Gọi ra </td>
+                    <td>
+                        <div class="text-center bg-warning text-white" style="border-radius: 15px; padding: 10px; font-weight: 600">
+                            Máy bận
+                        </div>
+                    </td>
+                }
+                else if (item.Status == "NO ANSWER")
+                {
+                    <td>
+                        <div class="text-center text-white" style="border-radius: 15px; padding: 10px; font-weight: 600;background-color:#556EE6">
+                            Không trả lời
+                        </div>
+                    </td>
+                }
+                else if (item.Status == "MISSED")
+                {
+                    <td>
+                        <div class="text-center bg-danger text-white" style="border-radius:15px;padding:10px;font-weight:600">
+                            Gọi nhỡ
+                        </div>
+                    </td>
                 }
                 else
                 {
-                    <td>Gọi vào</td>
+                    <td>
+                        <div class="text-center bg-success text-white" style="border-radius: 15px; padding: 10px;font-weight:600">
+                            Trả lời
+                        </div>
+                    </td>
                 }
-                <td>
+                <td class="text-center">@DateTime.MinValue.AddSeconds(item.Duration).ToString("HH:mm:ss")</td>
+                <td>@(item.Did.StartsWith("84") ? "0" + item.Did.Substring(2) : item.Did)</td>
+                @if (item.Type == "outbound")
+                {
+                    <td>
+                        <div class="text-center bg-danger text-white" style="border-radius: 15px; padding: 10px">
+                            Gọi ra
+                        </div>
+                    </td>
+                }
+                else if (item.Type == "inbound")
+                {
+                    <td>
+                        <div class="text-center bg-success text-white" style="border-radius: 15px; padding: 10px">
+                            Gọi vào
+                        </div>
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        <div class="text-center bg-info text-white" style="border-radius: 15px; padding: 10px">
+                            Gọi nội bộ
+                        </div>
+                    </td>
+                }
+                <td style="text-align:center">
                     @if (!string.IsNullOrEmpty(item.Play))
                     {
-                        <div class="d-grid gap-2">
-                            <a href="@item.Play" type="button" class="btn btn-outline-warning btn-lg">
-                                <i class="fa-solid fa-play"></i>
-                            </a>
-                        </div>
-                    }
-                    else
-                    {
-                        <span>No audio</span>
-                    }
-                </td>
-                <td>
-                    @if (!string.IsNullOrEmpty(item.Download))
-                    {
-                        <div class="d-grid gap-2">
-                            <a class="btn btn-success btn-lg" href="@Url.Action("DownloadForDate","CallHistory", new { downloadUrl = item.Download })">
-                                <i class="fa-solid fa-download"></i>
-                            </a>
-                        </div>
-                    }
-                    else
-                    {
-                        <span>No download available</span>
-                    }
-                </td>
-                <td>
-                    @if (!string.IsNullOrEmpty(item.Download))
-                    {
-                        <a href="@Url.Action("DownloadV1","CallHistory", new { downloadUrl = item.Download })">
-                            Download here and Update HH:mm:ss
+                        <a style="display:inline-block;margin:auto" href="@item.Play" type="button" class="btn btn-outline-warning">
+                            <i class="fa-solid fa-play"></i>
                         </a>
                     }
                     else
                     {
-                        <span>No download</span>
+                        <span></span>
                     }
                 </td>
-                <td>
+                <td style="text-align:center">
                     @if (!string.IsNullOrEmpty(item.Download))
                     {
-                        <a id="downloadLink" href="@Url.Action("DownloadV2","CallHistory", new { downloadUrl = item.Download })">
-                            Download here and Update URL
+
+                        <a style="display:inline-block;margin:auto" class="btn btn-success" href="@Url.Action("DownloadForUrl","CallHistory", new { downloadUrl = item.Download })">
+                            <i class="fa-solid fa-download"></i>
                         </a>
                     }
                     else
                     {
-                        <span>No download</span>
+                        <span></span>
+                    }
+                </td>
+                <td style="text-align:center">
+                    @if (!string.IsNullOrEmpty(item.Download))
+                    {
+                        <a style="display:inline-block;margin:auto" class="btn btn-primary" type="button" href="@Url.Action("DownloadFile","CallHistory", new { downloadUrl = item.Download })">
+                            <i class="fa-sharp fa-solid fa-download"></i>
+                        </a>
+                    }
+                    else
+                    {
+                        <span></span>
                     }
                 </td>
             </tr>
