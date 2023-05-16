@@ -1,97 +1,38 @@
 ﻿@model List<ApiMVC.Models.CallHistory>
 @{
-    ViewBag.Title = "GetHistoryCall";
+    ViewBag.Title = "Lịch sử cuộc gọi";
 }
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://kit.fontawesome.com/a36c5d7fce.js" crossorigin="anonymous"></script>
 <style>
-    .wrap {
-        height: 100%;
+    .cssbuttons-io-button {
         display: flex;
         align-items: center;
-        justify-content: center;
-    }
-
-    .button {
-        min-width: 300px;
-        min-height: 60px;
-        font-family: 'Nunito', sans-serif;
-        font-size: 22px;
-        text-transform: uppercase;
-        letter-spacing: 1.3px;
-        font-weight: 700;
-        color: #313133;
-        background: #4FD1C5;
-        background: linear-gradient(90deg, rgba(129,230,217,1) 0%, rgba(79,209,197,1) 100%);
+        font-family: inherit;
+        font-weight: 500;
+        font-size: 17px;
+        padding: 0.8em 1.5em 0.8em 1.2em;
+        color: white;
+        background: #ad5389;
+        background: linear-gradient(0deg, rgba(77,54,208,1) 0%, rgba(132,116,254,1) 100%);
         border: none;
-        border-radius: 1000px;
-        box-shadow: 12px 12px 24px rgba(79,209,197,.64);
-        transition: all 0.3s ease-in-out 0s;
-        cursor: pointer;
-        outline: none;
-        position: relative;
-        padding: 10px;
+        box-shadow: 0 0.7em 1.5em -0.5em #4d36d0be;
+        letter-spacing: 0.05em;
+        border-radius: 20em;
     }
 
-    button::before {
-        content: '';
-        border-radius: 1000px;
-        min-width: calc(300px + 12px);
-        min-height: calc(60px + 12px);
-        border: 6px solid #00FFCB;
-        box-shadow: 0 0 60px rgba(0,255,203,.64);
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        opacity: 0;
-        transition: all .3s ease-in-out 0s;
-    }
+        .cssbuttons-io-button svg {
+            margin-right: 8px;
+        }
 
-    .button:hover, .button:focus {
-        color: #313133;
-        transform: translateY(-6px);
-    }
+        .cssbuttons-io-button:hover {
+            box-shadow: 0 0.5em 1.5em -0.5em #4d36d0be;
+        }
 
-    button:hover::before, button:focus::before {
-        opacity: 1;
-    }
-
-    button::after {
-        content: '';
-        width: 30px;
-        height: 30px;
-        border-radius: 100%;
-        border: 6px solid #00FFCB;
-        position: absolute;
-        z-index: -1;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        animation: ring 1.5s infinite;
-    }
-
-    button:hover::after, button:focus::after {
-        animation: none;
-        display: none;
-    }
-
-    keyframes ring {
-        0%
-
-    {
-        width: 30px;
-        height: 30px;
-        opacity: 1;
-    }
-
-    100% {
-        width: 300px;
-        height: 300px;
-        opacity: 0;
-    }
-    }
+        .cssbuttons-io-button:active {
+            box-shadow: 0 0.3em 1em -0.5em #4d36d0be;
+        }
 </style>
 <script>
     function saveDatabase() {
@@ -109,13 +50,13 @@
             }
         };
         // Gửi request đến server
-        xhr.open('GET', '/CallHistory/Index', true);
+        xhr.open('GET', '/CallHistory/SaveCallHistory', true);
         xhr.send();
     }
 </script>
 
 
-<table class="table" style="font-size:13px">
+<table class="table table-bordered" style="font-size:13px">
     <thead >
         <tr>
             <th>Ngày gọi</th>
@@ -235,6 +176,9 @@
         }
     </tbody>
 </table>
-<div class="wrap">
-    <button class="button" onclick="saveDatabase()">Save to database</button>
+<div style="height:100%;display:flex;align-items:center;justify-content:center">
+    <button class="cssbuttons-io-button" onclick="saveDatabase()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"></path><path fill="currentColor" d="M1 14.5a6.496 6.496 0 0 1 3.064-5.519 8.001 8.001 0 0 1 15.872 0 6.5 6.5 0 0 1-2.936 12L7 21c-3.356-.274-6-3.078-6-6.5zm15.848 4.487a4.5 4.5 0 0 0 2.03-8.309l-.807-.503-.12-.942a6.001 6.001 0 0 0-11.903 0l-.12.942-.805.503a4.5 4.5 0 0 0 2.029 8.309l.173.013h9.35l.173-.013zM13 12h3l-4 5-4-5h3V8h2v4z"></path></svg>
+        <span>Save to database</span>
+    </button>
 </div>

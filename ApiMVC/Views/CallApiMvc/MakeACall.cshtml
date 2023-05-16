@@ -28,7 +28,7 @@
                 "WSServer": user.WSServer,
             };
         } else {
-            var url = '/CallApiMvc/Index';
+            var url = '/Call/Index';
             window.location.replace(url);
         }
         $("#btnExit").click(function () {
@@ -120,27 +120,6 @@
     }
 </style>
 
-@*<form action="~/CallApiMvc/CallApi" method="get">
-        <input type="text" id="phone" name="phone">
-        <br>
-        <button class="number-button digit" type="button" onclick="addValue(1)">1</button>
-        <button class="number-button digit" type="button" onclick="addValue(2)">2</button>
-        <button class="number-button digit" type="button" onclick="addValue(3)">3</button>
-        <br>
-        <button class="number-button digit" type="button" onclick="addValue(4)">4</button>
-        <button class="number-button digit" type="button" onclick="addValue(5)">5</button>
-        <button class="number-button digit" type="button" onclick="addValue(6)">6</button>
-        <br>
-        <button class="number-button digit" type="button" onclick="addValue(7)">7</button>
-        <button class="number-button digit" type="button" onclick="addValue(8)">8</button>
-        <button class="number-button digit" type="button" onclick="addValue(9)">9</button>
-        <br>
-        <button class="number-button digit" type="button" onclick="addValue(0)">0</button>
-        <br>
-        <button class="clear-button" type="button" onclick="clearValue()">Clear</button>
-        <button class="call-button" type="submit"></button>
-        <button class="call-button" id="phone" type="button" onclick="callControllerAction()"><i class="fa-solid fa-phone"></i>Gọi</button>
-    </form>*@
 <div>
     <a href="@Url.Action("GetHistoryCall","CallHistory")">
         Xem lịch sử cuộc gọi

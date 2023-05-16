@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace ApiMVC.Controllers
 {
-    public class CallApiMvcController : Controller
+    public class CallController : Controller
     {
         // GET: CallApiMvc
 
@@ -17,11 +17,10 @@ namespace ApiMVC.Controllers
             return View();
         }
 
-        public ActionResult Call()
+        public ActionResult MakeACall()
         {
             return View();
         }
-
 
         public async Task<ActionResult> CallApi(string phone)
         {

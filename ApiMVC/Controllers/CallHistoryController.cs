@@ -15,7 +15,7 @@ namespace ApiMVC.Controllers
     public class CallHistoryController : Controller
     {
         // Lấy lịch sử cuộc gọi và lưu vào database
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> SaveCallHistory()
         {
             using (var client = new HttpClient())
             {
@@ -74,7 +74,7 @@ namespace ApiMVC.Controllers
         }
 
         // Lấy lịch sử cuộc gọi nhưng không lưu vào db
-        public async Task<ActionResult> GetHistoryCall()
+        public async Task<ActionResult> GetCallHistory()
         {
             using (var httpClient = new HttpClient())
             {
@@ -119,7 +119,6 @@ namespace ApiMVC.Controllers
 
                 // Lưu tập tin vừa tải về vào đường dẫn chỉ định.
                 System.IO.File.WriteAllBytes(Path.Combine(folderPath, fileName), result);
-
                 // Trả về file vừa tải về để tải xuống và lưu vào thư mục Downloads.
                 return File(result, "audio/wav", fileName);
             }
@@ -163,8 +162,6 @@ namespace ApiMVC.Controllers
 
 
 
-
-
         // Xử lý và tải tập tin ghi âm (lưu tên file theo cú pháp năm-tháng-ngày_giờ:phút:giây)
         public string SaveFileDateTime(byte[] data)
         {
@@ -197,7 +194,7 @@ namespace ApiMVC.Controllers
         {
             using (WebClient client = new WebClient())
             {
-                // Tải về tập tin từ URL của API.
+                // Tải về tập tinv từ URL của API.
                 byte[] result = client.DownloadData(downloadUrl);
 
                 // Lưu tập tin vừa tải về vào đường dẫn chỉ định.
@@ -230,6 +227,8 @@ namespace ApiMVC.Controllers
                 return File(result, "audio/wav", Path.GetFileName(filePath));
             }
         }
+
+
 
         // Xử lý và tải tập tin ghi âm (lưu theo cú pháp chuỗi trong url)
         public string SaveFileUrl(byte[] data, string fileName)

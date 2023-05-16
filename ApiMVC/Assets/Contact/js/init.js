@@ -1,13 +1,11 @@
 $(function() {
-	var url = '/CallApiMvc/Call';
+	var url = '/Call/MakeACall';
 	var user = JSON.parse(localStorage.getItem('SIPCreds'));
 	if (user) {
 		$.each(user, function (k, v) { $('input[name="' + k + '"]').val(v); });
-		url = '/CallApiMvc/Call'; 
+		url = '/Call/MakeACall'; 
 		window.location.replace(url);
 	}
-
-
 	$('#btnConfig').click(function (event) {
 		user = {}, valid = true;
 		event.preventDefault();

@@ -178,7 +178,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
-    <Compile Include="Controllers\CallApiMvcController.cs" />
+    <Compile Include="Controllers\CallController.cs" />
     <Compile Include="Controllers\CallHistoryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
@@ -219,9 +219,6 @@
     <Content Include="Assets\Contact\sounds\dtmf.mp3" />
     <Content Include="Assets\Contact\sounds\incoming.mp3" />
     <Content Include="Assets\Contact\sounds\outgoing.mp3" />
-    <Content Include="Assets\css\style.css" />
-    <Content Include="Assets\js\main.js" />
-    <Content Include="Assets\js\test.js" />
     <Content Include="bin\ApiMVC.dll" />
     <Content Include="bin\ApiMVC.pdb" />
     <Content Include="Content\bootstrap-grid.css" />
@@ -300,17 +297,15 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\CallHistory\Index.cshtml" />
     <Content Include="Views\CallApiMvc\Index.cshtml" />
-    <Content Include="Views\CallApiMvc\Call.cshtml" />
-    <Content Include="Views\CallHistory\GetHistoryCall.cshtml" />
+    <Content Include="Views\CallApiMvc\MakeACall.cshtml" />
+    <Content Include="Views\CallHistory\GetCallHistory.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\SuccessfulResponse.cshtml" />
     <Content Include="Views\Home\FailedResponse.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Assets\Contact\recordings\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\bootstrap.min.js.map" />
