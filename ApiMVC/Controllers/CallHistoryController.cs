@@ -251,7 +251,7 @@ namespace ApiMVC.Controllers
             return Path.Combine(folderPath, fileName);
         }
 
-        // Lưu đường dẫn chứa file vào database 
+        // Lưu đường dẫn chứa file vào database (welcome)
         public async Task<ActionResult> DownloadFileUrl(string downloadUrl)
         {
             using (WebClient client = new WebClient())
